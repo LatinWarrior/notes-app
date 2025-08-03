@@ -5,29 +5,38 @@ const NodeList = ({ notes, deleteNote }) => {
 
   return (
     <div className='space-y-4'>
-      {notes.map((note) => (
-        <div
-          key={note.id}
-          className='p-4 bg-white rounded-lg shadow-md border-l-4 '>
-          <h3 className='text-lg font-bold'>{note.title}</h3>
-          <p className='text-sm text-gray-600'>
-            <strong>Category: </strong>
-            {note.category}
-          </p>
-          <p className='text-sm text-gray-600'>
-            <strong>Priority: </strong>
-            {note.priority}
-          </p>
-          <p className='mt-2'>
-            {note.description || 'No description provided.'}
-          </p>
-          <button
-            className='mt-3 text-red-500 cursor-pointer transition hover:text-red-700'
-            onClick={() => deleteNote(note.id)}>
-            🗑 Delete
-          </button>
-        </div>
-      ))}
+      {notes.map((note) => {
+        const borderColor =
+          note.priority === 'High'
+            ? 'border-red-500'
+            : note.priority === 'Medium'
+            ? 'border-orange-500'
+            : 'border-green-500';
+
+        return (
+          <div
+            key={note.id}
+            className={`p-4 bg-white rounded-lg shadow-md border-l-4 ${borderColor}`}>
+            <h3 className='text-lg font-bold'>{note.title}</h3>
+            <p className='text-sm text-gray-600'>
+              <strong>Category: </strong>
+              {note.category}
+            </p>
+            <p className='text-sm text-gray-600'>
+              <strong>Priority: </strong>
+              {note.priority}
+            </p>
+            <p className='mt-2'>
+              {note.description || 'No description provided.'}
+            </p>
+            <button
+              className='mt-3 text-red-500 cursor-pointer transition hover:text-red-700'
+              onClick={() => deleteNote(note.id)}>
+              🗑 Delete
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 };
