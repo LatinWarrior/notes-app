@@ -1,10 +1,20 @@
 import { useState } from 'react';
 
 const NoteForm = () => {
-  const [title, setTitle] = useState('');
-  const [priority, setPriority] = useState('Medium');
-  const [category, setCategory] = useState('Work');
-  const [description, setDescription] = useState('');
+  const [formData, setFormData] = useState({
+    title: '',
+    priority: 'Medium',
+    category: 'Work',
+    description: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
 
   return (
     <form className='mb-6 '>
@@ -13,10 +23,11 @@ const NoteForm = () => {
           Title
         </label>
         <input
+          name='title'
           type='text'
           id='title'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={formData.title}
+          onChange={handleChange}
           className='w-full p-2 border border-gray-300 rounded-lg'
         />
       </div>
@@ -25,10 +36,11 @@ const NoteForm = () => {
           Priority
         </label>
         <select
+          name='priority'
           type='text'
           id='priority'
-          value={priority}
-          onChange={(e) => setPriority(e.target.value)}
+          value={formData.priority}
+          onChange={handleChange}
           className='w-full p-2 border border-gray-300 rounded-lg'>
           <option value='High'>🔴 High</option>
           <option value='Medium'>🟠 Medium</option>
@@ -39,8 +51,8 @@ const NoteForm = () => {
         <label className='block font-semibold'>Category:</label>
         <select
           name='category'
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
+          value={formData.category}
+          onChange={handleChange}
           className='w-full p-2 border rounded-lg'>
           <option value='Work'>📂 Work</option>
           <option value='Personal'>🏠 Personal</option>
@@ -52,10 +64,11 @@ const NoteForm = () => {
           Description
         </label>
         <textarea
+          name='description'
           type='text'
           id='description'
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={formData.description}
+          onChange={handleChange}
           className='w-full p-2 border border-gray-300 rounded-lg'></textarea>
       </div>
       <button className='w-full bg-purple-500 text-white py-2 rounded-lg cursor-pointer hover:bg-purple-600'>
