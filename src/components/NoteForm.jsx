@@ -1,12 +1,18 @@
 import { useState } from 'react';
 
-const NoteForm = () => {
+import TextInput from './inputs/TextInput';
+import SelectInput from './inputs/SelectInput';
+import TextAreaInput from './inputs/TextAreaInput';
+
+const NoteForm = ({ notes, setNotes }) => {
   const [formData, setFormData] = useState({
     title: '',
     priority: 'Medium',
     category: 'Work',
     description: '',
   });
+
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,65 +22,87 @@ const NoteForm = () => {
     });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+    // Reset form after submission
+    if (!formData.title || !formData.description) {
+      alert('Please fill in all fields');
+      return;
+    }
+
+    // Create notes object.
+    const newNote = {
+      id: Date.now(), // Unique ID based on timestamp
+      ...formData,
+    };
+
+    // Add notes to state.
+    setNotes([newNote, ...notes]);
+    // Reset form data
+    setFormData({
+      title: '',
+      priority: 'Medium',
+      category: 'Work',
+      description: '',
+    });
+  };
+
   return (
-    <form className='mb-6 '>
-      <div className='mb-4'>
-        <label className='block font-semibold' htmlFor='title'>
-          Title
-        </label>
-        <input
-          name='title'
-          type='text'
-          id='title'
-          value={formData.title}
-          onChange={handleChange}
-          className='w-full p-2 border border-gray-300 rounded-lg'
-        />
-      </div>
-      <div className='mb-4'>
-        <label className='block font-semibold' htmlFor='priority'>
-          Priority
-        </label>
-        <select
-          name='priority'
-          type='text'
-          id='priority'
-          value={formData.priority}
-          onChange={handleChange}
-          className='w-full p-2 border border-gray-300 rounded-lg'>
-          <option value='High'>🔴 High</option>
-          <option value='Medium'>🟠 Medium</option>
-          <option value='Low'>🟢 Low</option>
-        </select>
-      </div>
-      <div className='mb-4'>
-        <label className='block font-semibold'>Category:</label>
-        <select
-          name='category'
-          value={formData.category}
-          onChange={handleChange}
-          className='w-full p-2 border rounded-lg'>
-          <option value='Work'>📂 Work</option>
-          <option value='Personal'>🏠 Personal</option>
-          <option value='Ideas'>💡 Ideas</option>
-        </select>
-      </div>
-      <div className='mb-4'>
-        <label className='block font-semibold' htmlFor='title'>
-          Description
-        </label>
-        <textarea
-          name='description'
-          type='text'
-          id='description'
-          value={formData.description}
-          onChange={handleChange}
-          className='w-full p-2 border border-gray-300 rounded-lg'></textarea>
-      </div>
-      <button className='w-full bg-purple-500 text-white py-2 rounded-lg cursor-pointer hover:bg-purple-600'>
-        Submit
+    <>
+      {/* Button to toggle form visibility */}
+      <button
+        onClick={() => setIsFormVisible(!isFormVisible)}
+        className='w-full bg-gray-100 border border-gray-300 text-purple-800 py-2 rounded-lg cursor-pointer hover:bg-purple-200 hover:border-purple-300 transition mb-4'>
+        {isFormVisible ? 'Hide Form ✖️' : 'Add New Note ➕'}
       </button>
-    </form>
+      {isFormVisible && (
+        <form onSubmit={handleSubmit} className='mb-6 '>
+          <TextInput
+            label='Title'
+            name='title'
+            value={formData.title}
+            onChange={handleChange}
+            required
+          />
+
+          <SelectInput
+            label='Priority'
+            name='priority'
+            value={formData.priority}
+            onChange={handleChange}
+            options={[
+              { value: 'High', label: '🔴 High' },
+              { value: 'Medium', label: '🟠 Medium' },
+              { value: 'Low', label: '🟢 Low' },
+            ]}
+          />
+
+          <SelectInput
+            label='Category'
+            name='category'
+            value={formData.category}
+            onChange={handleChange}
+            options={[
+              { value: 'Work', label: '📂 Work' },
+              { value: 'Personal', label: '🏠 Personal' },
+              { value: 'Ideas', label: '💡 Ideas' },
+            ]}
+          />
+          <TextAreaInput
+            label='Description'
+            name='description'
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
+
+          <button className='w-full bg-purple-500 text-white py-2 rounded-lg cursor-pointer hover:bg-purple-600'>
+            Submit
+          </button>
+        </form>
+      )}
+    </>
   );
 };
 
